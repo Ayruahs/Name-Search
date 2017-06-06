@@ -12,7 +12,7 @@ public class Main{
             Scanner in = new Scanner(System.in);
             Scanner sc = new Scanner(file);
             int matchRatio;
-            final int CONST_MATCH_RATIO = 75;
+            final int CONST_MATCH_RATIO = 80;
             final int SOUNDEX_SIM = 4;
             String exitCharacter = "q";
             String name;
@@ -54,7 +54,30 @@ public class Main{
 
                 quickSort.sort(secondPassList);
 
+                System.out.println("First Pass Results: ");
+                for(i=secondPassList.length-1; i>0; i--){
+                    if (Integer.parseInt(secondPassList[i][1]) >= CONST_MATCH_RATIO){
+                        String output = String.format("The name '%10s' matches with %10s with" +
+                                " a ratio of %s%%", inputName,
+                                secondPassList[i][0], secondPassList[i][1]);
+                        System.out.println(output);
+                    }
+                }
+                /*
                 System.out.println();
+                System.out.println("Second Pass Results: ");
+                for(i=secondPassList.length-1; i>0; i--){
+                    if (Integer.parseInt(secondPassList[i][1]) >= CONST_MATCH_RATIO){
+                        if(Soundex.compareSoundex(inputName, secondPassList[i][0])
+                                >= SOUNDEX_SIM){
+                            String output = String.format("The name '%10s' matches with %10s", inputName,
+                                    secondPassList[i][0]);
+                            System.out.println(output);
+                        }
+                    }
+
+                }
+                */
 
                 //Ask for more names or exit
                 System.out.print("\nEnter name of passenger to check or q to exit: ");
@@ -74,19 +97,15 @@ public class Main{
     private static int matchRatio(String string1, String string2){
         final int SMALL_DIFF = 4;
         final int MED_DIFF = 7;
-        final int LARGE_DIFF = 9;
         int matchRatio;
 
         if(Math.abs(string1.length() - string2.length()) < SMALL_DIFF){
             matchRatio = FuzzySearch.weightedRatio(string1.toLowerCase(), string2.toLowerCase());
         }else if(Math.abs(string1.length() - string2.length()) < MED_DIFF){
             matchRatio = FuzzySearch.ratio(string1.toLowerCase(), string2.toLowerCase());
-        }else if(Math.abs(string1.length() - string2.length()) < LARGE_DIFF){
-            matchRatio = FuzzySearch.partialRatio(string1.toLowerCase(), string2.toLowerCase());
         }else{
-            matchRatio = 0;
+            matchRatio = FuzzySearch.partialRatio(string1.toLowerCase(), string2.toLowerCase());
         }
-
         return matchRatio;
     }
 
