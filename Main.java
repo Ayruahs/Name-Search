@@ -19,6 +19,7 @@ public class Main{
             String[][] secondPassList;
             String[] finalList;
             String header;
+            Quicksort quickSort = new Quicksort();
 
             System.out.print("Enter name of passenger to check or q to exit: ");
             String inputName = in.nextLine();
@@ -31,17 +32,12 @@ public class Main{
                 while (sc.hasNext()) {
                     name = sc.nextLine();
 
-                    matchRatio = matchRatio(inputName, name);
-
-                    if (matchRatio >= CONST_MATCH_RATIO){
-                        i++;
-                    }
+                    i++;
                 }
-
                 sc.close();
                 secondPassList = new String[i][2];
                 sc = new Scanner(file);
-                System.out.println("\nFirst Pass results: \n");
+
                 // Populate Array
                 i = 0;
                 header = sc.nextLine();
@@ -50,44 +46,15 @@ public class Main{
 
                     matchRatio = matchRatio(inputName, name);
 
-                    if (matchRatio >= CONST_MATCH_RATIO){
-                        i++;
-                        String output = String.format(i + ") The passenger" +
-                                " %s has a %d%% match with %s", inputName,
-                                matchRatio, name);
-                        System.out.println(output);
-                        secondPassList[i-1][0] = name;
-                        secondPassList[i-1][1] = Integer.toString(matchRatio);
+                    secondPassList[i][0] = name;
+                    secondPassList[i][1] = Integer.toString(matchRatio);
+                    i++;
 
-                    }
                 }
+
+                quickSort.sort(secondPassList);
 
                 System.out.println();
-
-                //Second pass code from here:
-                int j = 0;
-                for(i=0; i<secondPassList.length; i++){
-                    if (Soundex.compareSoundex(inputName, secondPassList[i][0])
-                            >= SOUNDEX_SIM) {
-                        j++;
-                    }
-                }
-
-                finalList = new String[j];
-                j = 0;
-                for(i=0; i<secondPassList.length; i++){
-                    if (Soundex.compareSoundex(inputName, secondPassList[i][0])
-                            >= SOUNDEX_SIM) {
-                        finalList[j] = secondPassList[i][0];
-                        j++;
-                    }
-                }
-
-                System.out.println("Second Pass results: ");
-                for(i=0; i<finalList.length; i++){
-                    System.out.println(i + 1 + ")" + inputName +
-                            " matches with: " + finalList[i]);
-                }
 
                 //Ask for more names or exit
                 System.out.print("\nEnter name of passenger to check or q to exit: ");
